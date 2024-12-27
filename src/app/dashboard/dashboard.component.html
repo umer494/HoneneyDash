@@ -1,0 +1,12 @@
+<p>dashboard works!</p>
+<div class="container">
+    <div class="left-panel">
+        <ul class="tree">
+        <li *ngFor="let floor of floors">
+            <span (click)="onFloorClick(floor)">
+                <strong>{{floor.name}}</strong>
+            </span>
+            <ul *ngIf="selectedFloor===floors."(click)="onRoomClick(room)"></ul>
+        </li> 
+    </div>
+</div>
