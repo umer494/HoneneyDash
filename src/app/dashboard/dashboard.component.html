@@ -1,13 +1,57 @@
-<p>dashboard works!</p>
-<div class="container">
-    <div class="left-panel">
-        <ul class="tree">
-        <li *ngFor="let floor of floors">
-            <span (click)="onFloorClick(floor)">
-                <strong>{{floor.name}}</strong>
-            </span>
-            
-      <p>This code is pending because of the time scarcity
-        I have created the backend api and injected that in service , craeted front endcode to consume the 
-    backend api, . the html code is pending because of the less time. thanks </p>
+<div class="dashboard">
+    <div class="sidebar">
+        <h3>Building Floors</h3>
+        <ul>
+            <li *ngFor="let floor of floors">
+                <span class="floor-label" (click)="onFloorClick(floor)" [class.selected]="selectedFloor === floor">
+                    {{ floor.name }}
+                </span>
+                <ul *ngIf="selectedFloor === floor">
+                    <li *ngFor="let room of floor.rooms">
+                        <span class="room-label" (click)="onRoomClick(room)" [class.selected]="selectedRoom === room">
+                            {{ room.name }}
+                        </span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div *ngIf="selectedFloor && !selectedRoom" class="floor-details">
+            <h3>Floor: {{ selectedFloor.name }}</h3>
+            <p>
+                <strong>Average Temperature:</strong>
+                <span [style.color]="getTemperatureColor(getAverageTemperature(selectedFloor))">
+                    {{ getAverageTemperature(selectedFloor) | number: '1.1-1' }}°C
+                </span>
+            </p>
+            <p>
+                <strong>Average AQI:</strong>
+                <span [style.color]="getAqiColor(getAverageAQI(selectedFloor))">
+                    {{ getAverageAQI(selectedFloor) | number: '1.1-1' }}
+                </span>
+            </p>
+        </div>
+
+        <div *ngIf="selectedRoom" class="room-details">
+            <h3>Room: {{ selectedRoom.name }}</h3>
+            <p>
+                <strong>Temperature:</strong>
+                <span [style.color]="getTemperatureColor(selectedRoom.temperature)">
+                    {{ selectedRoom.temperature }}°C
+                </span>
+            </p>
+            <p>
+                <strong>AQI:</strong>
+                <span [style.color]="getAqiColor(selectedRoom.airQualityIndex)">
+                    {{ selectedRoom.airQualityIndex }}
+                </span>
+            </p>
+        </div>
+
+        <div *ngIf="!selectedFloor && !selectedRoom" class="no-selection">
+            <p>Please select a floor or room to view details.</p>
+        </div>
+    </div>
 </div>

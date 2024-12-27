@@ -26,50 +26,44 @@ namespace Honeywell.Model
 --------Controller code-----
 
 using Honeywell.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Honeywell.Controllers
+namespace BuildingManagementAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class BuildingControllercs : ControllerBase
+    [Route("api/[controller]")]
+    public class BuildingController : ControllerBase
     {
-
-
-        [HttpGet]
-        public IActionResult Get()
+        private static readonly List<Floors> Floors = new()
         {
-            var floors = new List<Floors>
+            new Floors
             {
-                new Floors
+                Name = "Floor 1",
+                Rooms = new List<Rooms>
                 {
-                    Id=1, Name="Dash",
-
-                    Rooms=new List<Rooms>
-
-                    { new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20},
-                          new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20}
-                    }
-                },
-                         new Floors
+                    new Rooms { Name = "Room 1", Temperature = 20, AirQualityIndex = 40 },
+                    new Rooms { Name = "Room 2", Temperature = 26, AirQualityIndex = 55 }
+                }
+            },
+            new Floors
+            {
+                Name = "Floor 2",
+                Rooms = new List<Rooms>
                 {
-                    Id=1, Name="Dash",
+                    new Rooms { Name = "Room 3", Temperature = 18, AirQualityIndex = 30 },
+                    new Rooms { Name = "Room 4", Temperature = 28, AirQualityIndex = 60 }
+                }
+            }
+        };
 
-                    Rooms=new List<Rooms>
-
-                    { new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20},
-                          new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20}
-                    }
-                         }
-            };
-            return Ok(floors);
-
-
-
+        [HttpGet("floors")]
+        public IActionResult GetFloors()
+        {
+            return Ok(new { floors = Floors });
         }
     }
-}
+
+  }
 
 
 ------Program.cs---------------
@@ -106,11 +100,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors("AllowAngularApp");
+
 
 app.Run();
 
@@ -131,7 +125,7 @@ app.Run();
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "api/Building",
+      "launchUrl": "api/Building/floors",
       "applicationUrl": "http://localhost:5050",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -141,7 +135,7 @@ app.Run();
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "api/Building",
+      "launchUrl": "api/Building/floors",
       "applicationUrl": "https://localhost:7175;http://localhost:5050",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -150,7 +144,7 @@ app.Run();
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/Building",
+      "launchUrl": "api/Building/floors",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
