@@ -1,0 +1,160 @@
+-----Rooms model
+
+namespace Honeywell.Model
+{
+    public class Rooms
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Temperature { get; set; }
+        public int aqi { get; set; }
+    }
+    
+}
+-------Floors Model----
+
+namespace Honeywell.Model
+{
+    public class Floors
+    {
+        public int Id { get; set; }
+        public  string Name { get; set; }
+        public List<Rooms> Rooms { get; set; }
+
+    }
+}
+--------Controller code-----
+
+using Honeywell.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Honeywell.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BuildingControllercs : ControllerBase
+    {
+
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var floors = new List<Floors>
+            {
+                new Floors
+                {
+                    Id=1, Name="Dash",
+
+                    Rooms=new List<Rooms>
+
+                    { new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20},
+                          new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20}
+                    }
+                },
+                         new Floors
+                {
+                    Id=1, Name="Dash",
+
+                    Rooms=new List<Rooms>
+
+                    { new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20},
+                          new Rooms{Id=10, Name="Dash", Temperature=10, aqi=20}
+                    }
+                         }
+            };
+            return Ok(floors);
+
+
+
+        }
+    }
+}
+
+
+------Program.cs---------------
+
+using Microsoft.Extensions.Options;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+options.AddPolicy("AllowAngularApp", policy =>
+{
+policy.WithOrigins("http://localhost:4200")  // Add your front-end URL here
+      .AllowAnyHeader()
+      .AllowAnyMethod();
+});
+});
+
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.UseCors("AllowAngularApp");
+
+app.Run();
+
+-----Launchsettings Json---
+
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64778",
+      "sslPort": 44348
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "api/Building",
+      "applicationUrl": "http://localhost:5050",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "api/Building",
+      "applicationUrl": "https://localhost:7175;http://localhost:5050",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/Building",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+

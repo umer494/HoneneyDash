@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpClient){}
   ngOnInit(): void {
       
-    this.http.get<Floor>('api').subscribe((floors)=>{
+    this.http.get<Floor>('http://localhost:5050/api/Building').subscribe((floors)=>{
 
    
     this.floors=this.floors
